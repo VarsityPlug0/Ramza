@@ -1,44 +1,79 @@
 # Deployment Summary
 
-## GitHub Repository
-The code has been successfully pushed to: https://github.com/VarsityPlug0/Ramza.git
+## Application Information
+- **Name**: Ramza's Chillas
+- **Framework**: Django 5.1+
+- **Repository**: https://github.com/VarsityPlug0/Ramza.git
+- **Deployment Platform**: Render
+- **Primary URL**: https://ramza-ut50.onrender.com
 
-## Render Deployment Configuration
+## Configuration Files
 
-### Files Created:
-1. **Procfile** - Defines the command to run the application
-2. **render.yaml** - Configures the Render deployment with:
-   - Web service named "ramzas-chillas"
-   - PostgreSQL database service
-   - Environment variables configuration
-3. **runtime.txt** - Specifies Python version 3.13.2
-4. **requirements.txt** - Updated with deployment dependencies:
-   - gunicorn for serving the application
-   - psycopg2-binary for PostgreSQL support
-   - dj-database-url for database URL parsing
-   - whitenoise for static file serving
+### 1. Procfile
+```
+web: gunicorn fastfood_restaurant.wsgi:application --bind 0.0.0.0:$PORT
+```
 
-### Settings Configuration
-The Django settings.py file has been updated to support both development and production environments:
-- Database configuration that automatically switches between SQLite (development) and PostgreSQL (production)
-- Debug mode controlled by environment variable
-- Allowed hosts configuration for production
-- Static files configuration for both development and production
-- WhiteNoise middleware for efficient static file serving in production
+### 2. runtime.txt
+```
+python-3.13.2
+```
 
-## Deployment Ready
-The application is now ready for deployment on Render. The configuration will:
-1. Automatically provision a PostgreSQL database
-2. Install all required dependencies
-3. Run database migrations
-4. Serve the application using Gunicorn
-5. Handle static files with WhiteNoise
-6. Support environment-based configuration
+### 3. render.yaml
+```yaml
+services:
+  - type: web
+    name: ramzas-chillas
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn fastfood_restaurant.wsgi:application --bind 0.0.0.0:$PORT"
+    envVars:
+      - key: DATABASE_URL
+        value: "postgresql://capitalxdb_user:cErzFTrAr2uuJ180NybFaWBVnr2gMLdI@dpg-d30rrh7diees7389fulg-a/capitalxdb"
+      - key: SECRET_KEY
+        sync: false
+      - key: WEB_CONCURRENCY
+        value: 4
+```
 
-## Next Steps
-To deploy on Render:
-1. Connect your GitHub repository to Render
-2. Render will automatically detect the render.yaml file
-3. The deployment will proceed automatically with the configured settings
+### 4. requirements.txt
+```
+Django>=5.0.2
+djangorestframework>=3.14.0
+Pillow>=10.0.0
+gunicorn>=20.1.0
+psycopg2-binary>=2.9.0
+dj-database-url>=2.0.0
+whitenoise>=6.0.0
+```
 
-Note: The GitHub Actions workflow file (.github/workflows/test.yml) was temporarily removed to allow pushing with the current token permissions. It can be added back later with a token that has the 'workflow' scope.
+## Environment Variables
+The application uses the following environment variables:
+- `DATABASE_URL`: PostgreSQL connection string (set in render.yaml)
+- `SECRET_KEY`: Django secret key (managed by Render)
+- `DEBUG`: Controls debug mode (set to False in production)
+- `ALLOWED_HOSTS`: List of allowed hostnames (configured in settings.py)
+
+## Database Configuration
+The application is configured to use the external PostgreSQL database:
+```
+postgresql://capitalxdb_user:cErzFTrAr2uuJ180NybFaWBVnr2gMLdI@dpg-d30rrh7diees7389fulg-a/capitalxdb
+```
+
+For local development, the application falls back to SQLite if the PostgreSQL database is not accessible.
+
+## Recent Updates
+- Added 'ramza-ut50.onrender.com' to ALLOWED_HOSTS to fix deployment issue
+- Configured database connection for external PostgreSQL database
+- Set up proper static file serving with WhiteNoise
+- Configured Gunicorn for production deployment
+
+## Troubleshooting
+If you encounter issues with the deployment:
+
+1. **Host not allowed error**: Ensure the Render domain is added to ALLOWED_HOSTS in settings.py
+2. **Database connection issues**: Verify the DATABASE_URL in render.yaml
+3. **Static files not loading**: Check WhiteNoise configuration in settings.py
+4. **Application not starting**: Verify the Procfile and start command
+
+For any changes to the application, push to the GitHub repository and Render will automatically redeploy.
