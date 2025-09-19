@@ -27,10 +27,19 @@ except Exception as e:
     traceback.print_exc()
     sys.exit(1)
 
+# Ensure staticfiles directory exists
+print("Ensuring staticfiles directory exists...")
+static_root = os.path.join(current_dir, 'staticfiles')
+if not os.path.exists(static_root):
+    os.makedirs(static_root)
+    print(f"Created staticfiles directory: {static_root}")
+else:
+    print(f"Staticfiles directory already exists: {static_root}")
+
 # Collect static files
 print("Collecting static files...")
 try:
-    execute_from_command_line(['manage.py', 'collectstatic', '--noinput', '--verbosity=1'])
+    execute_from_command_line(['manage.py', 'collectstatic', '--noinput', '--verbosity=1', '--clear'])
     print("Static files collected successfully")
 except Exception as e:
     print(f"Error collecting static files: {e}")
