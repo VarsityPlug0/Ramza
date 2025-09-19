@@ -1,12 +1,12 @@
 services:
   - type: web
-    name: ramzas-chillas
+    name: ramzas-chillas  # This will be your new service name
     env: python
     buildCommand: "pip install -r requirements.txt"
     startCommand: "python start_server.py"
     envVars:
       - key: DATABASE_URL
-        value: "postgresql://capitalxdb_user:cErzFTrAr2uuJ180NybFaWBVnr2gMLdI@dpg-d30rrh7diees7389fulg-a/capitalxdb"
+        value: "postgresql://your_db_user:your_db_password@your_db_host:5432/your_db_name"  # This will be your new database URL
       - key: SECRET_KEY
         sync: false
       - key: WEB_CONCURRENCY
