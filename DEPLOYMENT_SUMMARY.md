@@ -73,13 +73,15 @@ For local development, the application falls back to SQLite if the PostgreSQL da
 Several diagnostic tools have been added to help troubleshoot deployment issues:
 
 1. **manual_setup.py** - Simplified script that runs migrations and creates a superuser
-2. **setup_database.py** - Comprehensive script that runs migrations, verifies tables, and creates a superuser
-3. **ensure_migrations.py** - Custom management command that runs migrations and verifies required tables exist
-4. **test_db_connection.py** - Script to test database connectivity and list existing tables
-5. **run_migrations_manual.py** - Script to manually run migrations with verbose output
-6. **check_migrations.py** - Script to check if required tables exist
-7. **create_superuser.py** - Script to create a superuser account
-8. **test_db_url.py** - Script to test database URL parsing and direct connection
+2. **test_setup.py** - Script to test if Django and database are properly configured
+3. **db_test.py** - Script to test database connection directly
+4. **setup_database.py** - Comprehensive script that runs migrations, verifies tables, and creates a superuser
+5. **ensure_migrations.py** - Custom management command that runs migrations and verifies required tables exist
+6. **test_db_connection.py** - Script to test database connectivity and list existing tables
+7. **run_migrations_manual.py** - Script to manually run migrations with verbose output
+8. **check_migrations.py** - Script to check if required tables exist
+9. **create_superuser.py** - Script to create a superuser account
+10. **test_db_url.py** - Script to test database URL parsing and direct connection
 
 ## Default Superuser
 A default superuser account is automatically created:
