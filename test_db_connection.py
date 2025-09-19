@@ -2,15 +2,28 @@
 import os
 import sys
 import django
-from django.conf import settings
+import traceback
 
 # Add the project directory to Python path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 # Set up Django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'fastfood_restaurant.settings')
-django.setup()
 
+print("=== Testing Database Connection ===")
+print(f"Python path: {sys.path}")
+print(f"Current working directory: {os.getcwd()}")
+print(f"Django settings module: {os.environ.get('DJANGO_SETTINGS_MODULE')}")
+
+try:
+    django.setup()
+    print("Django setup completed successfully")
+except Exception as e:
+    print(f"Error during Django setup: {e}")
+    traceback.print_exc()
+    sys.exit(1)
+
+from django.conf import settings
 from django.db import connection
 
 def test_connection():
@@ -38,8 +51,14 @@ def test_connection():
         return True
     except Exception as e:
         print(f"Database connection failed: {e}")
+        traceback.print_exc()
         return False
 
 if __name__ == '__main__':
-    success = test_connection()
-    sys.exit(0 if success else 1)
+    try:
+        success = test_connection()
+        sys.exit(0 if success else 1)
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        traceback.print_exc()
+        sys.exit(1)
