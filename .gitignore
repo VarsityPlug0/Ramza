@@ -140,5 +140,5 @@ Thumbs.db
 # Environment variables
 .env
 
-# Media files (uncomment if you want to ignore all media files)
-# media/
+# Media files (excluding media files from version control)
+media/
