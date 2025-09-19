@@ -26,7 +26,7 @@ services:
     name: ramzas-chillas
     env: python
     buildCommand: "pip install -r requirements.txt"
-    startCommand: "python manage.py migrate --noinput && gunicorn fastfood_restaurant.wsgi:application --bind 0.0.0.0:$PORT"
+    startCommand: "python manage.py ensure_migrations && gunicorn fastfood_restaurant.wsgi:application --bind 0.0.0.0:$PORT"
     envVars:
       - key: DATABASE_URL
         value: "postgresql://capitalxdb_user:cErzFTrAr2uuJ180NybFaWBVnr2gMLdI@dpg-d30rrh7diees7389fulg-a/capitalxdb"
@@ -67,7 +67,7 @@ For local development, the application falls back to SQLite if the PostgreSQL da
 - Configured database connection for external PostgreSQL database
 - Set up proper static file serving with WhiteNoise
 - Configured Gunicorn for production deployment
-- Updated migration process to use standard Django migrate command with --noinput flag
+- Added robust migration checking with custom ensure_migrations command
 
 ## Troubleshooting
 If you encounter issues with the deployment:
@@ -76,6 +76,6 @@ If you encounter issues with the deployment:
 2. **Database connection issues**: Verify the DATABASE_URL in render.yaml
 3. **Static files not loading**: Check WhiteNoise configuration in settings.py
 4. **Application not starting**: Verify the Procfile and start command
-5. **Database tables missing**: The application now automatically runs migrations on startup using the standard Django migrate command
+5. **Database tables missing**: The application now uses a custom ensure_migrations command that verifies all required tables exist
 
 For any changes to the application, push to the GitHub repository and Render will automatically redeploy.
