@@ -2,46 +2,53 @@
 import os
 import sys
 import subprocess
-import time
-import traceback
+import django
+from django.core.management import execute_from_command_line
 
 print("=== START SERVER SCRIPT ===")
-print(f"Current time: {time.strftime('%Y-%m-%d %H:%M:%S')}")
-print(f"Working directory: {os.getcwd()}")
 
-# Run execution test
-print("Running execution test...")
-try:
-    result = subprocess.run([sys.executable, 'test_execution.py'], 
-                          capture_output=True, text=True, timeout=30)
-    print(f"Execution test stdout: {result.stdout}")
-    if result.stderr:
-        print(f"Execution test stderr: {result.stderr}")
-    print(f"Execution test return code: {result.returncode}")
-except Exception as e:
-    print(f"Error running execution test: {e}")
+# Set up Django
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'fastfood_restaurant.settings')
 
-# Run manual setup
-print("Running manual setup...")
 try:
-    result = subprocess.run([sys.executable, 'manual_setup.py'], 
-                          capture_output=False, text=True, timeout=120)
-    print(f"Manual setup completed with return code: {result.returncode}")
-    if result.returncode != 0:
-        print(f"Manual setup failed with return code: {result.returncode}")
-        sys.exit(result.returncode)
+    print("Setting up Django...")
+    django.setup()
+    print("Django setup completed successfully")
 except Exception as e:
-    print(f"Error running manual setup: {e}")
-    traceback.print_exc()
+    print(f"Error during Django setup: {e}")
     sys.exit(1)
+
+# Run migrations
+print("Running Django migrations...")
+try:
+    execute_from_command_line(['manage.py', 'migrate', '--noinput'])
+    print("Migrations completed successfully")
+except Exception as e:
+    print(f"Error running migrations: {e}")
+    sys.exit(1)
+
+# Create superuser if needed
+print("Creating superuser if needed...")
+try:
+    from django.contrib.auth import get_user_model
+    User = get_user_model()
+    if not User.objects.filter(is_superuser=True).exists():
+        print("Creating new superuser...")
+        User.objects.create_superuser('admin', 'admin@example.com', 'admin123')
+        print('Superuser created successfully')
+    else:
+        print('Superuser already exists')
+except Exception as e:
+    print(f"Error creating superuser: {e}")
 
 # Start Gunicorn server
 print("Starting Gunicorn server...")
+port = os.environ.get('PORT', '8000')
 try:
     os.execvp('gunicorn', [
         'gunicorn', 
         'fastfood_restaurant.wsgi:application', 
-        '--bind', '0.0.0.0:$PORT'
+        '--bind', f'0.0.0.0:{port}'
     ])
 except Exception as e:
     print(f"Error starting Gunicorn: {e}")

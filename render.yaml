@@ -3,7 +3,7 @@ services:
     name: ramzas-chillas
     env: python
     buildCommand: "pip install -r requirements.txt"
-    startCommand: "start.bat"
+    startCommand: "python start_server.py"
     envVars:
       - key: DATABASE_URL
         value: "postgresql://capitalxdb_user:cErzFTrAr2uuJ180NybFaWBVnr2gMLdI@dpg-d30rrh7diees7389fulg-a/capitalxdb"
