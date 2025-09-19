@@ -30,11 +30,10 @@ postgresql://capitalxdb_user:cErzFTrAr2uuJ180NybFaWBVnr2gMLdI@dpg-d30rrh7diees73
 - Static files are collected to the `staticfiles` directory during deployment
 
 ### Migration Process
-The application ensures migrations are applied automatically during deployment through multiple approaches:
+The application ensures migrations are applied automatically during deployment through our custom startup script:
 
-1. **Startup Script**: The [start.bat](file:///c%3A/Users/money/Bevan%20The%20IT%20GUY/absa/ramzas-chillas/start.bat) script runs `python manage.py migrate --noinput` before starting the web server
-2. **Manual Setup**: The [manual_setup.py](file://c:\Users\money\Bevan%20The%20IT%20GUY\absa\ramzas-chillas\manual_setup.py) script can also be used to apply migrations
-3. **Post-Deploy Hook**: The [migrate.bat](file:///c%3A/Users/money/Bevan%20The%20IT%20GUY/absa/ramzas-chillas/migrate.bat) script can be configured as a post-deploy script in Render
+1. **Startup Script**: The [start_server.py](file:///c%3A/Users/money/Bevan%20The%20IT%20GUY/absa/ramzas-chillas/start_server.py) script runs `python manage.py migrate --noinput` before starting the web server
+2. **Integrated Process**: This Python-based approach is more reliable than shell scripts on Render
 
 ### Superuser Creation
 The application automatically creates a default superuser during startup if one doesn't exist:
@@ -42,13 +41,14 @@ The application automatically creates a default superuser during startup if one 
 - Email: `admin@example.com`
 - Password: `admin123`
 
-A dedicated script [create_superuser.py](file:///c%3A/Users/money/Bevan%20The%20IT%20GUY/absa/ramzas-chillas/create_superuser.py) handles this process.
+This is handled directly in the [start_server.py](file:///c%3A/Users/money/Bevan%20The%20IT%20GUY/absa/ramzas-chillas/start_server.py) script.
 
 ### Start Process
-Render uses a batch script ([start.bat](file:///c%3A/Users/money/Bevan%20The%20IT%20GUY/absa/ramzas-chillas/start.bat)) that:
-1. Applies database migrations
-2. Creates a superuser if needed
-3. Starts Gunicorn with the Django application
+Render uses a Python script ([start_server.py](file:///c%3A/Users/money/Bevan%20The%20IT%20GUY/absa/ramzas-chillas/start_server.py)) that:
+1. Sets up the Django environment
+2. Applies database migrations
+3. Creates a superuser if needed
+4. Starts Gunicorn with the Django application
 
 ## Admin Access
 - Admin dashboard: `/dashboard/`
@@ -71,17 +71,11 @@ Render uses a batch script ([start.bat](file:///c%3A/Users/money/Bevan%20The%20I
 
 ### Required Settings in Render Dashboard
 1. **Build Command**: `pip install -r requirements.txt`
-2. **Start Command**: `start.bat`
+2. **Start Command**: `python start_server.py`
 3. **Environment Variables**:
    - `DATABASE_URL`: Your PostgreSQL connection string
    - `SECRET_KEY`: Your Django secret key
    - `WEB_CONCURRENCY`: 4 (or as needed)
-
-### Optional Post-Deploy Script
-In the Render dashboard under "Settings" → "Advanced", you can configure:
-- **Post-Deploy Script**: `migrate.bat`
-
-This provides an additional layer of ensuring migrations are applied.
 
 ## Troubleshooting
 If you encounter any issues:
