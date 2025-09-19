@@ -68,3 +68,4 @@ except Exception as e:
     traceback.print_exc()
 
 print("=== MANUAL SETUP COMPLETED SUCCESSFULLY ===")
+sys.exit(0)  # Explicitly exit with success code

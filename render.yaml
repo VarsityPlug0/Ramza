@@ -3,7 +3,7 @@ services:
     name: ramzas-chillas
     env: python
     buildCommand: "pip install -r requirements.txt"
-    startCommand: "python manual_setup.py && gunicorn fastfood_restaurant.wsgi:application --bind 0.0.0.0:$PORT"
+    startCommand: "chmod +x start.sh && ./start.sh"
     envVars:
       - key: DATABASE_URL
         value: "postgresql://capitalxdb_user:cErzFTrAr2uuJ180NybFaWBVnr2gMLdI@dpg-d30rrh7diees7389fulg-a/capitalxdb"
