@@ -1,0 +1,351 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{% if content_sections.menu_hero.meta_title %}{{ content_sections.menu_hero.meta_title }}{% else %}Menu - Ramza's Chillas{% endif %}{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="relative bg-gradient-to-br from-gray-800 via-gray-900 to-black overflow-hidden">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 100 100&quot;&gt;&lt;defs&gt;&lt;pattern id=&quot;grain&quot; width=&quot;100&quot; height=&quot;100&quot; patternUnits=&quot;userSpaceOnUse&quot;&gt;&lt;circle cx=&quot;25&quot; cy=&quot;25&quot; r=&quot;1&quot; fill=&quot;%23ffffff&quot;/&gt;&lt;circle cx=&quot;75&quot; cy=&quot;75&quot; r=&quot;1&quot; fill=&quot;%23ffffff&quot;/&gt;&lt;circle cx=&quot;50&quot; cy=&quot;10&quot; r=&quot;0.5&quot; fill=&quot;%23ffffff&quot;/&gt;&lt;circle cx=&quot;10&quot; cy=&quot;60&quot; r=&quot;0.5&quot; fill=&quot;%23ffffff&quot;/&gt;&lt;circle cx=&quot;90&quot; cy=&quot;30&quot; r=&quot;0.5&quot; fill=&quot;%23ffffff&quot;/&gt;&lt;/pattern&gt;&lt;/defs&gt;&lt;rect width=&quot;100&quot; height=&quot;100&quot; fill=&quot;url(%23grain)&quot;/&gt;&lt;/svg&gt;'); background-size: 100px 100px;"></div>
+    </div>
+    
+    <!-- Add a color overlay for the brand theme -->
+    <div class="absolute inset-0 bg-gradient-to-br from-orange-600/20 via-amber-500/10 to-red-600/20"></div>
+    
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <div class="text-center">
+            <div class="inline-flex items-center px-4 py-2 bg-white/25 backdrop-blur-sm rounded-full text-white text-sm font-medium mb-6 border border-white/20">
+                <i class="fas fa-fire mr-2 text-orange-300"></i>
+                {% if content_sections.menu_hero.extra_text_1 %}
+                    {{ content_sections.menu_hero.extra_text_1|safe }}
+                {% else %}
+                    Fresh • Hot • Delicious
+                {% endif %}
+            </div>
+            <h1 class="text-5xl md:text-6xl font-bold text-white mb-6 drop-shadow-lg">
+                {% if content_sections.menu_hero.title %}
+                    {{ content_sections.menu_hero.title|safe }}
+                {% else %}
+                    Our <span class="text-gradient bg-gradient-to-r from-orange-300 to-yellow-300 bg-clip-text text-transparent drop-shadow-lg">Chill</span> Menu
+                {% endif %}
+            </h1>
+            <p class="text-xl text-white max-w-2xl mx-auto mb-8 drop-shadow-md">
+                {% if content_sections.menu_hero.subtitle %}
+                    {{ content_sections.menu_hero.subtitle|safe }}
+                {% else %}
+                    Discover our signature chillas, crafted with the finest ingredients and served with unmatched flavor
+                {% endif %}
+            </p>
+            
+            <!-- Search Bar -->
+            <div class="max-w-md mx-auto relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <i class="fas fa-search text-gray-400"></i>
+                </div>
+                <input type="text" id="menuSearch" placeholder="Search our menu..." 
+                       class="w-full pl-10 pr-4 py-3 bg-white/95 backdrop-blur-sm border-0 rounded-2xl focus:ring-2 focus:ring-orange-400 focus:outline-none text-gray-800 placeholder-gray-500">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Menu Content -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <!-- Category Filter -->
+    <div class="mb-12">
+        <div class="flex flex-wrap justify-center gap-3">
+            <button class="category-btn active px-6 py-3 rounded-2xl font-semibold transition-all duration-300" data-category="All">
+                <i class="fas fa-th-large mr-2"></i>All Items
+            </button>
+            {% for category in categories %}
+            <button class="category-btn px-6 py-3 rounded-2xl font-semibold transition-all duration-300" data-category="{{ category }}">
+                {% if category == 'Burgers' %}
+                    <i class="fas fa-hamburger mr-2"></i>
+                {% elif category == 'Pizzas' %}
+                    <i class="fas fa-pizza-slice mr-2"></i>
+                {% elif category == 'Drinks' %}
+                    <i class="fas fa-glass-cheers mr-2"></i>
+                {% elif category == 'Sides' %}
+                    <i class="fas fa-cookie-bite mr-2"></i>
+                {% else %}
+                    <i class="fas fa-utensils mr-2"></i>
+                {% endif %}
+                {{ category }}
+            </button>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Menu Items Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8" id="menu-items">
+        {% for item in menu_items %}
+        <div class="menu-item group" data-category="{{ item.category }}" data-name="{{ item.name|lower }}">
+            <div class="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden group-hover:-translate-y-2">
+                <!-- Image Container -->
+                <div class="relative overflow-hidden">
+                    <div class="aspect-w-4 aspect-h-3">
+                        <!-- Real food image -->
+                        {% if item.image %}
+                            <img src="{{ item.image }}" alt="{{ item.name }}" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300">
+                        {% else %}
+                            <img src="{% static 'images/default-menu-item.jpg' %}" alt="{{ item.name }}" class="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300">
+                        {% endif %}
+                    </div>
+                    
+                    <!-- Category Badge -->
+                    <div class="absolute top-4 left-4">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-white/95 backdrop-blur-sm text-gray-800 border border-gray-200">
+                            {{ item.category }}
+                        </span>
+                    </div>
+                    
+                    <!-- Quick Add Button -->
+                    <div class="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <button class="quick-add-btn w-10 h-10 bg-white/95 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-primary hover:text-white transition-colors duration-200 border border-gray-200"
+                                data-id="{{ item.id }}" 
+                                data-name="{{ item.name }}" 
+                                data-price="{{ item.price }}">
+                            <i class="fas fa-plus text-sm text-gray-700"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Content -->
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-3">
+                        <h3 class="text-xl font-bold text-gray-900 group-hover:text-primary transition-colors duration-200">
+                            {{ item.name }}
+                        </h3>
+                        <div class="flex items-center">
+                            <span class="text-2xl font-bold text-primary">R{{ item.price }}</span>
+                        </div>
+                    </div>
+                    
+                    <p class="text-gray-600 text-sm mb-6 line-clamp-2">
+                        {{ item.description }}
+                    </p>
+                    
+                    <!-- Add to Cart Button -->
+                    <button class="add-to-cart-btn w-full bg-gradient-to-r from-primary to-primary-dark hover:from-primary-dark hover:to-primary text-white font-semibold py-3 px-6 rounded-2xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50"
+                            data-id="{{ item.id }}" 
+                            data-name="{{ item.name }}" 
+                            data-price="{{ item.price }}">
+                        <i class="fas fa-shopping-cart mr-2"></i>
+                        Add to Cart
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Empty State -->
+    <div id="empty-state" class="hidden text-center py-16">
+        <div class="max-w-md mx-auto">
+            <div class="w-24 h-24 mx-auto bg-gray-100 rounded-full flex items-center justify-center mb-6">
+                <i class="fas fa-search text-3xl text-gray-400"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">No items found</h3>
+            <p class="text-gray-600">Try adjusting your search or filter to find what you're looking for.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Toast Notification -->
+<div id="toast" class="fixed bottom-4 right-4 transform translate-y-full transition-transform duration-300 z-50">
+    <div class="bg-green-500 text-white px-6 py-3 rounded-2xl shadow-lg flex items-center">
+        <i class="fas fa-check-circle mr-3"></i>
+        <span id="toast-message">Item added to cart!</span>
+    </div>
+</div>
+
+<style>
+/* Category Button Styles */
+.category-btn {
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    color: #6b7280;
+    border: 2px solid transparent;
+}
+
+.category-btn:hover {
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(251, 191, 36, 0.4);
+}
+
+.category-btn.active {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    border-color: #f59e0b;
+    box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4);
+}
+
+/* Menu Item Animations */
+.menu-item {
+    opacity: 1;
+    transform: scale(1);
+    transition: all 0.3s ease;
+}
+
+.menu-item.fade-out {
+    opacity: 0;
+    transform: scale(0.95);
+}
+
+/* Line Clamp */
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Aspect Ratio */
+.aspect-w-4 {
+    position: relative;
+    padding-bottom: 75%;
+}
+
+.aspect-w-4 > * {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+</style>
+
+<script>
+// Category filtering
+const categoryBtns = document.querySelectorAll('.category-btn');
+const menuItems = document.querySelectorAll('.menu-item');
+const emptyState = document.getElementById('empty-state');
+const searchInput = document.getElementById('menuSearch');
+
+// Initialize category filtering
+categoryBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const category = btn.dataset.category;
+        
+        // Update active button
+        categoryBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // Filter items
+        filterItems(category, searchInput.value);
+    });
+});
+
+// Search functionality
+searchInput.addEventListener('input', (e) => {
+    const searchTerm = e.target.value.toLowerCase();
+    const activeCategory = document.querySelector('.category-btn.active').dataset.category;
+    filterItems(activeCategory, searchTerm);
+});
+
+// Filter function
+function filterItems(category, searchTerm = '') {
+    let visibleCount = 0;
+    
+    menuItems.forEach(item => {
+        const itemCategory = item.dataset.category;
+        const itemName = item.dataset.name;
+        
+        const categoryMatch = category === 'All' || itemCategory === category;
+        const searchMatch = searchTerm === '' || itemName.includes(searchTerm);
+        
+        if (categoryMatch && searchMatch) {
+            item.classList.remove('fade-out');
+            item.style.display = 'block';
+            visibleCount++;
+        } else {
+            item.classList.add('fade-out');
+            setTimeout(() => {
+                if (item.classList.contains('fade-out')) {
+                    item.style.display = 'none';
+                }
+            }, 300);
+        }
+    });
+    
+    // Show/hide empty state
+    if (visibleCount === 0) {
+        emptyState.classList.remove('hidden');
+    } else {
+        emptyState.classList.add('hidden');
+    }
+}
+
+// Add to cart functionality
+const addToCartBtns = document.querySelectorAll('.add-to-cart-btn, .quick-add-btn');
+const toast = document.getElementById('toast');
+const toastMessage = document.getElementById('toast-message');
+
+addToCartBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+        const id = this.dataset.id;
+        const name = this.dataset.name;
+        const price = parseFloat(this.dataset.price);
+        const category = this.closest('.menu-item').dataset.category;
+        
+        // Create cart item object
+        const cartItem = {
+            id: id,
+            name: name,
+            price: price,
+            category: category
+        };
+        
+        // Add to cart using localStorage
+        let cart = JSON.parse(localStorage.getItem('ramza_cart') || '[]');
+        const existingItem = cart.find(item => item.id === id);
+        
+        if (existingItem) {
+            existingItem.quantity += 1;
+        } else {
+            cart.push({ ...cartItem, quantity: 1 });
+        }
+        
+        localStorage.setItem('ramza_cart', JSON.stringify(cart));
+        
+        // Add animation to button
+        this.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+            this.style.transform = 'scale(1)';
+        }, 150);
+        
+        // Show toast notification
+        toastMessage.textContent = `${name} added to cart!`;
+        toast.style.transform = 'translateY(0)';
+        
+        setTimeout(() => {
+            toast.style.transform = 'translateY(100%)';
+        }, 3000);
+        
+        // Update cart count in navigation if it exists
+        updateCartCount();
+    });
+});
+
+// Update cart count in navigation
+function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem('ramza_cart') || '[]');
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    const cartCountElement = document.querySelector('.cart-count');
+    if (cartCountElement) {
+        cartCountElement.textContent = totalItems;
+        cartCountElement.style.display = totalItems > 0 ? 'inline' : 'none';
+    }
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    filterItems('All');
+});
+</script>
+{% endblock %}

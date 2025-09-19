@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Ramza's Chillas Admin{% endblock %}</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom Styles -->
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        .admin-sidebar {
+            background: linear-gradient(180deg, #1f2937 0%, #111827 100%);
+        }
+        .sidebar-link:hover {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid #3b82f6;
+        }
+        .stats-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+        .stats-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    {% if user.is_authenticated and user.is_staff %}
+    <div class="flex h-screen">
+        <!-- Sidebar -->
+        <aside class="w-64 admin-sidebar">
+            <div class="p-6">
+                <h1 class="text-white text-xl font-bold">Ramza's Admin</h1>
+                <div class="mt-2 text-sm text-gray-300">
+                    Welcome, {{ user.first_name|default:user.username }}!
+                </div>
+            </div>
+            
+            <nav class="mt-6">
+                <a href="{% url 'custom_admin:dashboard' %}" class="sidebar-link flex items-center px-6 py-3 text-gray-300 hover:text-white transition-colors">
+                    <i class="fas fa-tachometer-alt mr-3"></i>
+                    Dashboard
+                </a>
+                
+                <a href="{% url 'custom_admin:menu_items' %}" class="sidebar-link flex items-center px-6 py-3 text-gray-300 hover:text-white transition-colors">
+                    <i class="fas fa-utensils mr-3"></i>
+                    Menu Items
+                </a>
+                
+                <a href="{% url 'custom_admin:categories' %}" class="sidebar-link flex items-center px-6 py-3 text-gray-300 hover:text-white transition-colors">
+                    <i class="fas fa-tags mr-3"></i>
+                    Categories
+                </a>
+                
+                <a href="{% url 'custom_admin:orders' %}" class="sidebar-link flex items-center px-6 py-3 text-gray-300 hover:text-white transition-colors">
+                    <i class="fas fa-shopping-cart mr-3"></i>
+                    Orders
+                </a>
+                
+                <a href="{% url 'custom_admin:site_settings' %}" class="sidebar-link flex items-center px-6 py-3 text-gray-300 hover:text-white transition-colors">
+                    <i class="fas fa-cog mr-3"></i>
+                    Settings
+                </a>
+                
+                <div class="border-t border-gray-700 mt-6 pt-6">
+                    <a href="{% url 'home' %}" target="_blank" class="sidebar-link flex items-center px-6 py-3 text-gray-300 hover:text-white transition-colors">
+                        <i class="fas fa-external-link-alt mr-3"></i>
+                        View Site
+                    </a>
+                    
+                    <a href="{% url 'custom_admin:logout' %}" class="sidebar-link flex items-center px-6 py-3 text-gray-300 hover:text-white transition-colors">
+                        <i class="fas fa-sign-out-alt mr-3"></i>
+                        Logout
+                    </a>
+                </div>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="flex-1 overflow-y-auto">
+            <!-- Top Bar -->
+            <header class="gradient-bg text-white px-6 py-4">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold">{% block page_title %}Dashboard{% endblock %}</h2>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-sm opacity-90">Welcome, {{ user.first_name|default:user.username }}!</span>
+                        <div class="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                            <i class="fas fa-user text-sm"></i>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Messages -->
+            {% if messages %}
+                <div class="p-6">
+                    {% for message in messages %}
+                        <div class="mb-4 p-4 rounded-lg {% if message.tags == 'success' %}bg-green-100 text-green-800 border border-green-200{% elif message.tags == 'error' %}bg-red-100 text-red-800 border border-red-200{% else %}bg-blue-100 text-blue-800 border border-blue-200{% endif %}">
+                            <div class="flex items-center">
+                                <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'error' %}fa-exclamation-circle{% else %}fa-info-circle{% endif %} mr-2"></i>
+                                {{ message }}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <!-- Page Content -->
+            <div class="p-6">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+    {% else %}
+        {% block login_content %}{% endblock %}
+    {% endif %}
+    
+    <!-- JavaScript -->
+    <script>
+        // Auto-hide messages after 5 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const messages = document.querySelectorAll('[class*="bg-green-100"], [class*="bg-red-100"], [class*="bg-blue-100"]');
+            messages.forEach(function(message) {
+                setTimeout(function() {
+                    message.style.opacity = '0';
+                    setTimeout(function() {
+                        message.remove();
+                    }, 300);
+                }, 5000);
+            });
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

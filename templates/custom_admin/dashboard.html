@@ -1,0 +1,552 @@
+{% extends 'custom_admin/base.html' %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<!-- Welcome Message -->
+<div class="gradient-bg text-white p-6 rounded-2xl mb-8">
+    <div class="flex items-center justify-between">
+        <div>
+            <h1 class="text-3xl font-bold mb-2">Welcome to Admin Dashboard</h1>
+            <p class="opacity-90">Manage your restaurant efficiently with our comprehensive admin tools</p>
+        </div>
+        <div class="text-6xl opacity-20">
+            <i class="fas fa-chart-line"></i>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Total Menu Items -->
+    <div class="stats-card p-6 border-l-4 border-blue-500">
+        <div class="flex items-center">
+            <div class="p-3 bg-blue-100 rounded-full">
+                <i class="fas fa-utensils text-blue-600 text-xl"></i>
+            </div>
+            <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Total Menu Items</p>
+                <p class="text-3xl font-bold text-gray-900">{{ total_items }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Active Categories -->
+    <div class="stats-card p-6 border-l-4 border-green-500">
+        <div class="flex items-center">
+            <div class="p-3 bg-green-100 rounded-full">
+                <i class="fas fa-tags text-green-600 text-xl"></i>
+            </div>
+            <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Active Categories</p>
+                <p class="text-3xl font-bold text-gray-900">{{ total_categories }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Featured Items -->
+    <div class="stats-card p-6 border-l-4 border-yellow-500">
+        <div class="flex items-center">
+            <div class="p-3 bg-yellow-100 rounded-full">
+                <i class="fas fa-star text-yellow-600 text-xl"></i>
+            </div>
+            <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Featured Items</p>
+                <p class="text-3xl font-bold text-gray-900">{{ featured_items }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Low Stock Items -->
+    <div class="stats-card p-6 border-l-4 border-red-500">
+        <div class="flex items-center">
+            <div class="p-3 bg-red-100 rounded-full">
+                <i class="fas fa-exclamation-triangle text-red-600 text-xl"></i>
+            </div>
+            <div class="ml-4">
+                <p class="text-sm font-medium text-gray-600">Low Stock Items</p>
+                <p class="text-3xl font-bold text-gray-900">{{ low_stock_items }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions & Background Images -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+    <!-- Quick Actions -->
+    <div class="stats-card p-6">
+        <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+            <i class="fas fa-bolt text-yellow-500 mr-3"></i>
+            Quick Actions
+        </h3>
+        
+        <div class="space-y-4">
+            <a href="{% url 'custom_admin:add_menu_item' %}" 
+               class="block p-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105">
+                <div class="flex items-center">
+                    <i class="fas fa-plus-circle text-xl mr-3"></i>
+                    <div>
+                        <p class="font-semibold">Add New Menu Item</p>
+                        <p class="text-sm opacity-90">Create a new food item for your menu</p>
+                    </div>
+                </div>
+            </a>
+            
+            <a href="{% url 'custom_admin:add_category' %}" 
+               class="block p-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105">
+                <div class="flex items-center">
+                    <i class="fas fa-tag text-xl mr-3"></i>
+                    <div>
+                        <p class="font-semibold">Add New Category</p>
+                        <p class="text-sm opacity-90">Organize your menu with categories</p>
+                    </div>
+                </div>
+            </a>
+            
+            <a href="{% url 'custom_admin:orders' %}" 
+               class="block p-4 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all transform hover:scale-105">
+                <div class="flex items-center">
+                    <i class="fas fa-shopping-cart text-xl mr-3"></i>
+                    <div>
+                        <p class="font-semibold">View All Orders</p>
+                        <p class="text-sm opacity-90">Manage customer orders and status</p>
+                    </div>
+                </div>
+            </a>
+            
+            <a href="{% url 'custom_admin:site_settings' %}" 
+               class="block p-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all transform hover:scale-105">
+                <div class="flex items-center">
+                    <i class="fas fa-cog text-xl mr-3"></i>
+                    <div>
+                        <p class="font-semibold">Site Settings</p>
+                        <p class="text-sm opacity-90">Configure restaurant information</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    
+    <!-- Background Images Management -->
+    <div class="stats-card p-6">
+        <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+            <i class="fas fa-image text-purple-500 mr-3"></i>
+            Background Images
+            <span class="ml-2 text-sm font-normal text-gray-500">({{ background_images.total_count }} images)</span>
+        </h3>
+        
+        {% if background_images.status == 'active' and background_images.images %}
+            <div class="mb-4">
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+                    <div class="flex items-center text-blue-800">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        <span class="text-sm">These images appear randomly on menu, cart, and checkout pages</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-3 max-h-64 overflow-y-auto">
+                {% for image in background_images.images %}
+                <div class="relative group">
+                    <img src="{{ image.image_url }}" 
+                         alt="{{ image.display_name }}" 
+                         class="w-full h-20 object-cover rounded-lg border-2 border-gray-200 hover:border-purple-400 transition-all cursor-pointer transform hover:scale-105"
+                         onclick="showImageModal('{{ image.image_url }}', '{{ image.display_name }}', '{{ image.type }}')">
+                    <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 rounded-lg transition-all">
+                        <div class="absolute bottom-1 left-1 text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                            {{ image.display_name|truncatechars:20 }}
+                        </div>
+                        <div class="absolute top-1 right-1 text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                            {{ image.file_size }}KB
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="mt-4 p-3 bg-gray-50 rounded-lg">
+                <p class="text-xs text-gray-600 mb-2">
+                    <i class="fas fa-folder mr-1"></i>
+                    <strong>Location:</strong> static/images/background/
+                </p>
+                <p class="text-xs text-gray-600">
+                    <i class="fas fa-upload mr-1"></i>
+                    <strong>Add images:</strong> Copy .jpg, .png, .jpeg, .gif, or .webp files to the background folder
+                </p>
+            </div>
+            
+        {% elif background_images.status == 'empty' %}
+            <div class="text-center py-8">
+                <div class="text-gray-400 mb-4">
+                    <i class="fas fa-image text-4xl"></i>
+                </div>
+                <h4 class="text-lg font-semibold text-gray-600 mb-2">No Background Images</h4>
+                <p class="text-sm text-gray-500 mb-4">Add background images to enhance your website's visual appeal</p>
+                
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-left">
+                    <h5 class="font-semibold text-yellow-800 mb-2">How to add background images:</h5>
+                    <ol class="text-sm text-yellow-700 space-y-1">
+                        <li>1. Copy image files to: <code class="bg-yellow-100 px-1 rounded">static/images/background/</code></li>
+                        <li>2. Supported formats: .jpg, .png, .jpeg, .gif, .webp</li>
+                        <li>3. Recommended size: 1920x1080 or higher</li>
+                        <li>4. Images will appear randomly on content pages</li>
+                    </ol>
+                </div>
+            </div>
+            
+        {% elif background_images.status == 'folder_missing' %}
+            <div class="text-center py-8">
+                <div class="text-red-400 mb-4">
+                    <i class="fas fa-exclamation-triangle text-4xl"></i>
+                </div>
+                <h4 class="text-lg font-semibold text-red-600 mb-2">Background Folder Missing</h4>
+                <p class="text-sm text-red-500 mb-4">The background images folder doesn't exist</p>
+                
+                <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-left">
+                    <p class="text-sm text-red-700">
+                        <strong>Create folder:</strong> static/images/background/
+                    </p>
+                </div>
+            </div>
+            
+        {% else %}
+            <div class="text-center py-8">
+                <div class="text-gray-400 mb-4">
+                    <i class="fas fa-exclamation-circle text-4xl"></i>
+                </div>
+                <h4 class="text-lg font-semibold text-gray-600 mb-2">Error Loading Background Images</h4>
+                <p class="text-sm text-gray-500">{{ background_images.error_message|default:'Unknown error occurred' }}</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Website Images Gallery -->
+<div class="stats-card p-6 mb-8">
+    <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+        <i class="fas fa-images text-green-500 mr-3"></i>
+        Website Images Gallery
+    </h3>
+        
+        <!-- Image Categories Tabs -->
+        <div class="mb-4">
+            <div class="flex flex-wrap gap-2" id="image-tabs">
+                <button onclick="showImageCategory('menu_items')" 
+                        class="image-tab-btn active px-3 py-1 rounded-full text-sm font-medium transition-colors" 
+                        data-category="menu_items">
+                    Menu Items ({{ website_images.menu_items|length }})
+                </button>
+                <button onclick="showImageCategory('categories')" 
+                        class="image-tab-btn px-3 py-1 rounded-full text-sm font-medium transition-colors" 
+                        data-category="categories">
+                    Categories ({{ website_images.categories|length }})
+                </button>
+                <button onclick="showImageCategory('site_settings')" 
+                        class="image-tab-btn px-3 py-1 rounded-full text-sm font-medium transition-colors" 
+                        data-category="site_settings">
+                    Site Images ({{ website_images.site_settings|length }})
+                </button>
+                <button onclick="showImageCategory('static_images')" 
+                        class="image-tab-btn px-3 py-1 rounded-full text-sm font-medium transition-colors" 
+                        data-category="static_images">
+                    Static Files ({{ website_images.static_images|length }})
+                </button>
+                <button onclick="showImageCategory('backgrounds')" 
+                        class="image-tab-btn px-3 py-1 rounded-full text-sm font-medium transition-colors" 
+                        data-category="backgrounds">
+                    Backgrounds ({{ background_images.total_count }})
+                </button>
+            </div>
+        </div>
+        
+        <!-- Image Grid -->
+        <div class="image-gallery-container" style="max-height: 400px; overflow-y: auto;">
+            <!-- Menu Items Images -->
+            <div id="menu_items-images" class="image-category-content">
+                {% if website_images.menu_items %}
+                    <div class="grid grid-cols-2 gap-2">
+                        {% for image in website_images.menu_items %}
+                        <div class="relative group">
+                            <img src="{{ image.image_url }}" 
+                                 alt="{{ image.name }}" 
+                                 class="w-full h-16 object-cover rounded-lg border hover:scale-105 transition-transform cursor-pointer"
+                                 onclick="showImageModal('{{ image.image_url }}', '{{ image.name }}', '{{ image.type }}')">
+                            <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 rounded-lg transition-all">
+                                <div class="absolute bottom-1 left-1 text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                                    {{ image.name|truncatechars:15 }}
+                                </div>
+                                {% if image.featured %}
+                                <div class="absolute top-1 right-1">
+                                    <span class="inline-block w-3 h-3 bg-yellow-500 rounded-full" title="Featured"></span>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-8 text-gray-500">
+                        <i class="fas fa-utensils text-2xl mb-2 opacity-50"></i>
+                        <p class="text-sm">No menu item images yet</p>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Categories Images -->
+            <div id="categories-images" class="image-category-content hidden">
+                {% if website_images.categories %}
+                    <div class="grid grid-cols-2 gap-2">
+                        {% for image in website_images.categories %}
+                        <div class="relative group">
+                            <img src="{{ image.image_url }}" 
+                                 alt="{{ image.name }}" 
+                                 class="w-full h-16 object-cover rounded-lg border hover:scale-105 transition-transform cursor-pointer"
+                                 onclick="showImageModal('{{ image.image_url }}', '{{ image.name }}', '{{ image.type }}')">
+                            <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 rounded-lg transition-all">
+                                <div class="absolute bottom-1 left-1 text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                                    {{ image.name|truncatechars:15 }}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-8 text-gray-500">
+                        <i class="fas fa-tags text-2xl mb-2 opacity-50"></i>
+                        <p class="text-sm">No category images yet</p>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Site Settings Images -->
+            <div id="site_settings-images" class="image-category-content hidden">
+                {% if website_images.site_settings %}
+                    <div class="grid grid-cols-2 gap-2">
+                        {% for image in website_images.site_settings %}
+                        <div class="relative group">
+                            <img src="{{ image.image_url }}" 
+                                 alt="{{ image.name }}" 
+                                 class="w-full h-16 object-cover rounded-lg border hover:scale-105 transition-transform cursor-pointer"
+                                 onclick="showImageModal('{{ image.image_url }}', '{{ image.name }}', '{{ image.type }}')">
+                            <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 rounded-lg transition-all">
+                                <div class="absolute bottom-1 left-1 text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                                    {{ image.name|truncatechars:15 }}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-8 text-gray-500">
+                        <i class="fas fa-cog text-2xl mb-2 opacity-50"></i>
+                        <p class="text-sm">No site images configured</p>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Static Images -->
+            <div id="static_images-images" class="image-category-content hidden">
+                {% if website_images.static_images %}
+                    <div class="grid grid-cols-2 gap-2">
+                        {% for image in website_images.static_images %}
+                        <div class="relative group">
+                            <img src="{{ image.image_url }}" 
+                                 alt="{{ image.name }}" 
+                                 class="w-full h-16 object-cover rounded-lg border hover:scale-105 transition-transform cursor-pointer"
+                                 onclick="showImageModal('{{ image.image_url }}', '{{ image.name }}', '{{ image.type }}')">
+                            <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 rounded-lg transition-all">
+                                <div class="absolute bottom-1 left-1 text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                                    {{ image.name|truncatechars:15 }}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-8 text-gray-500">
+                        <i class="fas fa-folder text-2xl mb-2 opacity-50"></i>
+                        <p class="text-sm">No static images found</p>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <!-- Background Images -->
+            <div id="backgrounds-images" class="image-category-content hidden">
+                {% if background_images.images %}
+                    <div class="grid grid-cols-2 gap-2">
+                        {% for image in background_images.images %}
+                        <div class="relative group">
+                            <img src="{{ image.image_url }}" 
+                                 alt="{{ image.display_name }}" 
+                                 class="w-full h-16 object-cover rounded-lg border hover:scale-105 transition-transform cursor-pointer"
+                                 onclick="showImageModal('{{ image.image_url }}', '{{ image.display_name }}', '{{ image.type }}')">
+                            <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 rounded-lg transition-all">
+                                <div class="absolute bottom-1 left-1 text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                                    {{ image.display_name|truncatechars:15 }}
+                                </div>
+                                <div class="absolute top-1 right-1 text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                                    {{ image.file_size }}KB • {{ image.extension }}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="mt-4 p-3 bg-purple-50 border border-purple-200 rounded-lg">
+                        <div class="flex items-center text-purple-800">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            <div class="text-sm">
+                                <p class="font-medium">Background Images Usage:</p>
+                                <p>These images appear randomly on menu, cart, and checkout pages (not on home or admin pages)</p>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="text-center py-8 text-gray-500">
+                        <i class="fas fa-image text-2xl mb-2 opacity-50"></i>
+                        <p class="text-sm">No background images found</p>
+                        <p class="text-xs mt-1">Add images to static/images/background/ folder</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="mt-4 text-center">
+            <p class="text-xs text-gray-500">
+                <i class="fas fa-info-circle mr-1"></i>
+                Click on any image to view it in full size
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Orders Section -->
+<div class="mt-8 stats-card p-6">
+    <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+        <i class="fas fa-clock text-blue-500 mr-3"></i>
+        Recent Orders
+    </h3>
+    
+    {% if recent_orders %}
+        <div class="space-y-4">
+            {% for order in recent_orders %}
+            <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="font-semibold text-gray-900">Order #{{ order.id }}</p>
+                        <p class="text-sm text-gray-600">{{ order.customer_name }}</p>
+                        <p class="text-sm text-gray-500">{{ order.created_at|date:"M d, Y - g:i A" }}</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-bold text-gray-900">${{ order.total_amount }}</p>
+                        <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full
+                            {% if order.status == 'pending' %}bg-yellow-100 text-yellow-800
+                            {% elif order.status == 'preparing' %}bg-blue-100 text-blue-800
+                            {% elif order.status == 'ready' %}bg-green-100 text-green-800
+                            {% elif order.status == 'delivered' %}bg-gray-100 text-gray-800
+                            {% else %}bg-red-100 text-red-800{% endif %}">
+                            {{ order.get_status_display }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="mt-4 text-center">
+            <a href="{% url 'custom_admin:orders' %}" 
+               class="text-blue-600 hover:text-blue-800 font-medium">
+                View All Orders →
+            </a>
+        </div>
+    {% else %}
+        <div class="text-center py-8 text-gray-500">
+            <i class="fas fa-shopping-cart text-4xl mb-4 opacity-50"></i>
+            <p>No orders yet</p>
+            <p class="text-sm">Orders will appear here when customers place them</p>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Image Modal -->
+<div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg max-w-4xl max-h-full overflow-hidden">
+        <div class="flex justify-between items-center p-4 border-b">
+            <div>
+                <h3 id="modalImageName" class="text-lg font-semibold"></h3>
+                <p id="modalImageType" class="text-sm text-gray-600"></p>
+            </div>
+            <button onclick="hideImageModal()" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <div class="p-4">
+            <img id="modalImage" src="" alt="" class="max-w-full max-h-96 mx-auto object-contain">
+        </div>
+    </div>
+</div>
+
+<style>
+.image-tab-btn {
+    background-color: #f3f4f6;
+    color: #6b7280;
+}
+
+.image-tab-btn.active {
+    background-color: #f59e0b;
+    color: white;
+}
+
+.image-tab-btn:hover {
+    background-color: #e5e7eb;
+}
+
+.image-tab-btn.active:hover {
+    background-color: #d97706;
+}
+</style>
+
+<script>
+function showImageCategory(category) {
+    // Hide all image categories
+    document.querySelectorAll('.image-category-content').forEach(el => {
+        el.classList.add('hidden');
+    });
+    
+    // Show selected category
+    document.getElementById(category + '-images').classList.remove('hidden');
+    
+    // Update tab styles
+    document.querySelectorAll('.image-tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    document.querySelector(`[data-category="${category}"]`).classList.add('active');
+}
+
+function showImageModal(imageUrl, imageName, imageType) {
+    document.getElementById('modalImage').src = imageUrl;
+    document.getElementById('modalImageName').textContent = imageName;
+    document.getElementById('modalImageType').textContent = imageType;
+    document.getElementById('imageModal').classList.remove('hidden');
+}
+
+function hideImageModal() {
+    document.getElementById('imageModal').classList.add('hidden');
+}
+
+// Close modal when clicking outside
+document.getElementById('imageModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        hideImageModal();
+    }
+});
+
+// Close modal with Escape key
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        hideImageModal();
+    }
+});
+</script>
+{% endblock %}

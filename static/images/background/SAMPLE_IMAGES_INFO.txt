@@ -1,0 +1,30 @@
+/* Sample Background Image - Restaurant Theme 1 */
+/* This is a placeholder - replace with actual .jpg/.png files */
+
+/* You can create this as restaurant-bg-1.jpg using online gradient generators or image editors */
+
+Background 1: Warm restaurant gradient
+- Colors: #ff6b6b to #feca57 (warm red to golden yellow)
+- Style: Diagonal gradient
+- Theme: Cozy restaurant ambiance
+
+Background 2: Cool dining gradient  
+- Colors: #667eea to #764ba2 (blue to purple)
+- Style: Linear gradient
+- Theme: Modern upscale dining
+
+Background 3: Food photography style
+- Colors: #2c3e50 to #34495e (dark blue-gray)
+- Style: Radial gradient from center
+- Theme: Food photography backdrop
+
+To add real background images:
+1. Find high-quality restaurant/food images (1920x1080 or higher)
+2. Save them as .jpg or .png files in this folder
+3. Name them something like: restaurant-bg-1.jpg, food-bg-2.png, etc.
+4. The system will automatically detect and use them
+
+Sample image sources:
+- Unsplash.com (search: restaurant, food, dining)
+- Pexels.com (search: restaurant interior, food background)
+- Free stock photo sites

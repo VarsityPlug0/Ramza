@@ -1,0 +1,197 @@
+{% extends 'custom_admin/base.html' %}
+
+{% block page_title %}Orders{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="flex justify-between items-center mb-8">
+    <div>
+        <h1 class="text-3xl font-bold text-gray-900">📋 Orders</h1>
+        <p class="text-gray-600 mt-1">Manage customer orders and their status</p>
+    </div>
+    <div class="flex space-x-2">
+        <button onclick="location.reload()" 
+                class="bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-600 transition-colors">
+            <i class="fas fa-sync-alt mr-2"></i>Refresh
+        </button>
+    </div>
+</div>
+
+<!-- Filter Bar -->
+<div class="stats-card p-4 mb-6">
+    <form method="get" class="flex items-center space-x-4">
+        <div class="flex-1">
+            <select name="status" 
+                    onchange="this.form.submit()"
+                    class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+                <option value="">All Orders</option>
+                <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+                <option value="preparing" {% if status_filter == 'preparing' %}selected{% endif %}>Preparing</option>
+                <option value="ready" {% if status_filter == 'ready' %}selected{% endif %}>Ready</option>
+                <option value="delivered" {% if status_filter == 'delivered' %}selected{% endif %}>Delivered</option>
+                <option value="cancelled" {% if status_filter == 'cancelled' %}selected{% endif %}>Cancelled</option>
+            </select>
+        </div>
+        {% if status_filter %}
+        <a href="{% url 'custom_admin:orders' %}" 
+           class="bg-gray-500 text-white px-4 py-2 rounded-lg font-semibold hover:bg-gray-600 transition-colors">
+            <i class="fas fa-times mr-1"></i>Clear Filter
+        </a>
+        {% endif %}
+    </form>
+</div>
+
+<!-- Orders List -->
+{% if page_obj %}
+<div class="space-y-4 mb-8">
+    {% for order in page_obj %}
+    <div class="stats-card p-6">
+        <div class="flex justify-between items-start mb-4">
+            <div>
+                <h3 class="text-lg font-semibold text-gray-900">Order #{{ order.id }}</h3>
+                <p class="text-sm text-gray-600">{{ order.customer_name }} • {{ order.customer_phone }}</p>
+                <p class="text-sm text-gray-500">{{ order.created_at|date:"M d, Y - g:i A" }}</p>
+            </div>
+            <div class="text-right">
+                <p class="text-xl font-bold text-gray-900">${{ order.total_amount }}</p>
+                <div class="mt-2">
+                    <select onchange="updateOrderStatus({{ order.id }}, this.value)"
+                            class="px-3 py-1 border border-gray-300 rounded-lg text-sm
+                                {% if order.status == 'pending' %}bg-yellow-100 text-yellow-800
+                                {% elif order.status == 'preparing' %}bg-blue-100 text-blue-800
+                                {% elif order.status == 'ready' %}bg-green-100 text-green-800
+                                {% elif order.status == 'delivered' %}bg-gray-100 text-gray-800
+                                {% else %}bg-red-100 text-red-800{% endif %}">
+                        <option value="pending" {% if order.status == 'pending' %}selected{% endif %}>Pending</option>
+                        <option value="preparing" {% if order.status == 'preparing' %}selected{% endif %}>Preparing</option>
+                        <option value="ready" {% if order.status == 'ready' %}selected{% endif %}>Ready</option>
+                        <option value="delivered" {% if order.status == 'delivered' %}selected{% endif %}>Delivered</option>
+                        <option value="cancelled" {% if order.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <div class="border-t border-gray-200 pt-4">
+            <h4 class="font-medium text-gray-900 mb-2">Order Details:</h4>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                <div>
+                    <p><strong>Order Type:</strong> {{ order.order_type|title }}</p>
+                    {% if order.delivery_address %}
+                    <p><strong>Address:</strong> {{ order.delivery_address }}</p>
+                    {% endif %}
+                </div>
+                <div>
+                    <p><strong>Payment:</strong> {{ order.payment_method|title }}</p>
+                    {% if order.special_instructions %}
+                    <p><strong>Instructions:</strong> {{ order.special_instructions }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Pagination -->
+{% if page_obj.has_other_pages %}
+<div class="flex justify-center items-center space-x-2 mb-8">
+    {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}" 
+           class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+            <i class="fas fa-chevron-left mr-1"></i>Previous
+        </a>
+    {% endif %}
+    
+    <span class="px-4 py-2 bg-orange-500 text-white rounded-lg">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+    </span>
+    
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}" 
+           class="px-4 py-2 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+            Next<i class="fas fa-chevron-right ml-1"></i>
+        </a>
+    {% endif %}
+</div>
+{% endif %}
+
+{% else %}
+<div class="stats-card p-12 text-center">
+    <div class="text-gray-400 mb-6">
+        <i class="fas fa-shopping-cart text-6xl"></i>
+    </div>
+    <h3 class="text-xl font-semibold text-gray-900 mb-2">No Orders Found</h3>
+    {% if status_filter %}
+        <p class="text-gray-600 mb-6">No orders with status "{{ status_filter }}"</p>
+        <a href="{% url 'custom_admin:orders' %}" 
+           class="gradient-bg text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity">
+            <i class="fas fa-times mr-2"></i>Clear Filter
+        </a>
+    {% else %}
+        <p class="text-gray-600">Orders will appear here when customers place them</p>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function updateOrderStatus(orderId, newStatus) {
+    fetch(`/dashboard/orders/update-status/${orderId}/`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: `status=${newStatus}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Update the select element's styling based on new status
+            const select = event.target;
+            select.className = select.className.replace(/bg-\w+-100 text-\w+-800/g, '');
+            
+            const statusColors = {
+                'pending': 'bg-yellow-100 text-yellow-800',
+                'preparing': 'bg-blue-100 text-blue-800',
+                'ready': 'bg-green-100 text-green-800',
+                'delivered': 'bg-gray-100 text-gray-800',
+                'cancelled': 'bg-red-100 text-red-800'
+            };
+            
+            select.className += ' ' + statusColors[newStatus];
+            
+            // Show success message
+            showMessage('Order status updated successfully!', 'success');
+        } else {
+            showMessage('Failed to update order status', 'error');
+        }
+    })
+    .catch(error => {
+        showMessage('Error updating order status', 'error');
+    });
+}
+
+function showMessage(message, type) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `fixed top-4 right-4 p-4 rounded-lg z-50 ${type === 'success' ? 'bg-green-100 text-green-800 border border-green-200' : 'bg-red-100 text-red-800 border border-red-200'}`;
+    messageDiv.innerHTML = `
+        <div class="flex items-center">
+            <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} mr-2"></i>
+            ${message}
+        </div>
+    `;
+    
+    document.body.appendChild(messageDiv);
+    
+    setTimeout(() => {
+        messageDiv.remove();
+    }, 3000);
+}
+</script>
+
+<!-- Add CSRF token for AJAX requests -->
+{% csrf_token %}
+{% endblock %}

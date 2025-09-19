@@ -1,0 +1,335 @@
+{% extends 'base.html' %}
+
+{% block title %}Checkout - Ramza's Chillas{% endblock %}
+
+{% block content %}
+<!-- Checkout Header -->
+<div class="relative bg-gradient-to-br from-gray-50 to-gray-100 border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="text-center">
+            <div class="inline-flex items-center px-4 py-2 bg-primary/10 rounded-full text-primary text-sm font-medium mb-4">
+                <i class="fas fa-credit-card mr-2"></i>
+                Secure Checkout
+            </div>
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                Complete Your <span class="text-gradient bg-gradient-to-r from-primary to-primary-dark bg-clip-text text-transparent">Order</span>
+            </h1>
+        </div>
+    </div>
+</div>
+
+<!-- Checkout Content -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Checkout Form -->
+        <div class="lg:col-span-2 space-y-8">
+            <!-- Delivery Options -->
+            <div class="bg-white rounded-3xl shadow-lg p-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                    <i class="fas fa-truck text-primary mr-3"></i>
+                    Delivery Method
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <label class="delivery-option cursor-pointer">
+                        <input type="radio" name="delivery_method" value="delivery" class="sr-only" checked>
+                        <div class="p-6 border-2 border-primary bg-primary/5 rounded-2xl transition-all duration-200">
+                            <div class="flex items-center justify-between mb-3">
+                                <i class="fas fa-motorcycle text-2xl text-primary"></i>
+                                <span class="text-lg font-semibold text-primary">$3.99</span>
+                            </div>
+                            <h4 class="font-semibold text-gray-900 mb-2">Delivery</h4>
+                            <p class="text-sm text-gray-600">25-35 mins • To your door</p>
+                        </div>
+                    </label>
+                    <label class="delivery-option cursor-pointer">
+                        <input type="radio" name="delivery_method" value="pickup" class="sr-only">
+                        <div class="p-6 border-2 border-gray-200 rounded-2xl hover:border-primary hover:bg-primary/5 transition-all duration-200">
+                            <div class="flex items-center justify-between mb-3">
+                                <i class="fas fa-store text-2xl text-gray-400"></i>
+                                <span class="text-lg font-semibold text-green-600">Free</span>
+                            </div>
+                            <h4 class="font-semibold text-gray-900 mb-2">Pickup</h4>
+                            <p class="text-sm text-gray-600">15-20 mins • In-store pickup</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Customer Information -->
+            <div class="bg-white rounded-3xl shadow-lg p-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                    <i class="fas fa-user text-primary mr-3"></i>
+                    Your Information
+                </h3>
+                <form id="checkout-form" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">First Name</label>
+                            <input type="text" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="John">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Last Name</label>
+                            <input type="text" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="Doe">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
+                        <input type="email" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="john@example.com">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-2">Phone Number</label>
+                        <input type="tel" required class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="(555) 123-4567">
+                    </div>
+                    
+                    <!-- Address (shown for delivery) -->
+                    <div id="address-section" class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 mb-2">Street Address</label>
+                            <input type="text" id="address" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="123 Main Street">
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">City</label>
+                                <input type="text" id="city" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="City">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">State</label>
+                                <input type="text" id="state" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="State">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">ZIP Code</label>
+                                <input type="text" id="zip" class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="12345">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Payment Information -->
+            <div class="bg-white rounded-3xl shadow-lg p-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                    <i class="fas fa-credit-card text-primary mr-3"></i>
+                    Payment Information
+                </h3>
+                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-6 text-center">
+                    <i class="fas fa-info-circle text-blue-500 text-2xl mb-3"></i>
+                    <h4 class="font-semibold text-blue-900 mb-2">Payment Integration</h4>
+                    <p class="text-blue-700 text-sm">This is a demo checkout. In production, integrate with Stripe, PayPal, or similar payment processor.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Order Summary -->
+        <div class="lg:col-span-1">
+            <div class="bg-white rounded-3xl shadow-lg p-8 sticky top-8">
+                <h3 class="text-xl font-bold text-gray-900 mb-6">Order Summary</h3>
+                
+                <!-- Order Items -->
+                <div id="order-items" class="space-y-4 mb-6">
+                    <!-- Dynamic order items will be inserted here -->
+                </div>
+                
+                <!-- Summary Totals -->
+                <div class="space-y-4 mb-6">
+                    <div class="flex justify-between text-gray-600">
+                        <span>Subtotal</span>
+                        <span id="summary-subtotal">R0.00</span>
+                    </div>
+                    <div class="flex justify-between text-gray-600">
+                        <span>Delivery Fee</span>
+                        <span id="summary-delivery">R3.99</span>
+                    </div>
+                    <div class="flex justify-between text-gray-600">
+                        <span>Tax (8.25%)</span>
+                        <span id="summary-tax">R0.00</span>
+                    </div>
+                    <div class="border-t border-gray-200 pt-4">
+                        <div class="flex justify-between text-xl font-bold text-gray-900">
+                            <span>Total</span>
+                            <span id="summary-total">R0.00</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Place Order Button -->
+                <button id="place-order-btn" class="w-full bg-gradient-to-r from-primary to-primary-dark text-white font-bold py-4 rounded-2xl hover:from-primary-dark hover:to-primary transition-all duration-300 transform hover:scale-105 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none" disabled>
+                    <i class="fas fa-check-circle mr-3"></i>
+                    <span>Place Order</span>
+                </button>
+                
+                <div class="text-center mt-6">
+                    <a href="/cart/" class="inline-flex items-center text-primary hover:text-primary-dark font-semibold transition-colors duration-200">
+                        <i class="fas fa-arrow-left mr-2"></i>
+                        Back to Cart
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Checkout functionality
+class CheckoutManager {
+    constructor() {
+        this.cart = JSON.parse(localStorage.getItem('ramza_cart') || '[]');
+        this.deliveryMethod = 'delivery';
+        this.init();
+    }
+    
+    init() {
+        this.renderOrderSummary();
+        this.bindEvents();
+        this.validateForm();
+    }
+    
+    renderOrderSummary() {
+        const orderItemsContainer = document.getElementById('order-items');
+        
+        if (this.cart.length === 0) {
+            window.location.href = '/cart/';
+            return;
+        }
+        
+        orderItemsContainer.innerHTML = '';
+        
+        this.cart.forEach(item => {
+            const orderItem = document.createElement('div');
+            orderItem.className = 'flex items-center space-x-3 p-3 bg-gray-50 rounded-xl';
+            orderItem.innerHTML = `
+                <div class="w-10 h-10 bg-gradient-to-br from-orange-100 to-orange-200 rounded-lg flex items-center justify-center">
+                    <i class="${this.getIcon(item.category)} text-orange-400"></i>
+                </div>
+                <div class="flex-1">
+                    <h4 class="font-semibold text-gray-900 text-sm">${item.name}</h4>
+                    <p class="text-xs text-gray-500">Qty: ${item.quantity}</p>
+                </div>
+                <span class="font-semibold text-gray-900">R${(item.price * item.quantity).toFixed(2)}</span>
+            `;
+            orderItemsContainer.appendChild(orderItem);
+        });
+        
+        this.updateTotals();
+    }
+    
+    getIcon(category) {
+        const icons = {
+            'Burgers': 'fas fa-hamburger',
+            'Pizzas': 'fas fa-pizza-slice',
+            'Drinks': 'fas fa-glass-cheers',
+            'Sides': 'fas fa-cookie-bite'
+        };
+        return icons[category] || 'fas fa-utensils';
+    }
+    
+    updateTotals() {
+        const subtotal = this.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        const deliveryFee = this.deliveryMethod === 'delivery' ? 3.99 : 0;
+        const tax = subtotal * 0.0825;
+        const total = subtotal + deliveryFee + tax;
+        
+        document.getElementById('summary-subtotal').textContent = `R${subtotal.toFixed(2)}`;
+        document.getElementById('summary-delivery').textContent = `R${deliveryFee.toFixed(2)}`;
+        document.getElementById('summary-tax').textContent = `R${tax.toFixed(2)}`;
+        document.getElementById('summary-total').textContent = `R${total.toFixed(2)}`;
+    }
+    
+    bindEvents() {
+        // Delivery method selection
+        const deliveryOptions = document.querySelectorAll('input[name="delivery_method"]');
+        deliveryOptions.forEach(option => {
+            option.addEventListener('change', (e) => {
+                this.deliveryMethod = e.target.value;
+                this.updateDeliveryUI();
+                this.updateTotals();
+                this.toggleAddressSection();
+            });
+        });
+        
+        // Form validation
+        const form = document.getElementById('checkout-form');
+        const inputs = form.querySelectorAll('input[required]');
+        inputs.forEach(input => {
+            input.addEventListener('input', () => this.validateForm());
+        });
+        
+        // Place order
+        document.getElementById('place-order-btn').addEventListener('click', () => {
+            this.placeOrder();
+        });
+    }
+    
+    updateDeliveryUI() {
+        const options = document.querySelectorAll('.delivery-option');
+        options.forEach((option, index) => {
+            const input = option.querySelector('input');
+            const div = option.querySelector('div');
+            
+            if (input.checked) {
+                div.classList.remove('border-gray-200', 'hover:border-primary', 'hover:bg-primary/5');
+                div.classList.add('border-primary', 'bg-primary/5');
+            } else {
+                div.classList.remove('border-primary', 'bg-primary/5');
+                div.classList.add('border-gray-200', 'hover:border-primary', 'hover:bg-primary/5');
+            }
+        });
+    }
+    
+    toggleAddressSection() {
+        const addressSection = document.getElementById('address-section');
+        const addressInputs = addressSection.querySelectorAll('input');
+        
+        if (this.deliveryMethod === 'delivery') {
+            addressSection.style.display = 'block';
+            addressInputs.forEach(input => input.required = true);
+        } else {
+            addressSection.style.display = 'none';
+            addressInputs.forEach(input => input.required = false);
+        }
+        
+        this.validateForm();
+    }
+    
+    validateForm() {
+        const form = document.getElementById('checkout-form');
+        const requiredInputs = form.querySelectorAll('input[required]');
+        const placeOrderBtn = document.getElementById('place-order-btn');
+        
+        let isValid = true;
+        requiredInputs.forEach(input => {
+            if (!input.value.trim()) {
+                isValid = false;
+            }
+        });
+        
+        placeOrderBtn.disabled = !isValid;
+    }
+    
+    placeOrder() {
+        const btn = document.getElementById('place-order-btn');
+        const originalText = btn.innerHTML;
+        
+        // Show loading state
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-3"></i>Processing...';
+        btn.disabled = true;
+        
+        // Simulate order processing
+        setTimeout(() => {
+            // Clear cart
+            localStorage.removeItem('ramza_cart');
+            
+            // Show success message
+            alert('Order placed successfully! You will receive a confirmation email shortly.');
+            
+            // Redirect to home
+            window.location.href = '/';
+        }, 2000);
+    }
+}
+
+// Initialize checkout when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    new CheckoutManager();
+});
+</script>
+{% endblock %}
