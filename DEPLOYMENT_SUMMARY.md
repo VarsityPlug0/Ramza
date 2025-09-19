@@ -69,6 +69,14 @@ For local development, the application falls back to SQLite if the PostgreSQL da
 - Configured Gunicorn for production deployment
 - Added robust migration checking with custom ensure_migrations command
 
+## Diagnostic Tools
+Several diagnostic tools have been added to help troubleshoot deployment issues:
+
+1. **ensure_migrations.py** - Custom management command that runs migrations and verifies required tables exist
+2. **test_db_connection.py** - Script to test database connectivity and list existing tables
+3. **run_migrations_manual.py** - Script to manually run migrations with verbose output
+4. **check_migrations.py** - Script to check if required tables exist
+
 ## Troubleshooting
 If you encounter issues with the deployment:
 
