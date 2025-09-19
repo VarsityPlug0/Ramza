@@ -90,13 +90,36 @@ if 'DATABASE_URL' in os.environ:
         'default': dj_database_url.parse(os.environ['DATABASE_URL'])
     }
 else:
-    # Local development database
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
+    # Local development database - try PostgreSQL first, fallback to SQLite
+    try:
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': 'capitalxdb',
+                'USER': 'capitalxdb_user',
+                'PASSWORD': 'cErzFTrAr2uuJ180NybFaWBVnr2gMLdI',
+                'HOST': 'dpg-d30rrh7diees7389fulg-a',
+                'PORT': '5432',
+            }
         }
-    }
+        # Test the connection
+        import psycopg2
+        conn = psycopg2.connect(
+            dbname='capitalxdb',
+            user='capitalxdb_user',
+            password='cErzFTrAr2uuJ180NybFaWBVnr2gMLdI',
+            host='dpg-d30rrh7diees7389fulg-a',
+            port='5432'
+        )
+        conn.close()
+    except:
+        # Fallback to SQLite if PostgreSQL is not accessible
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
+        }
 
 
 # Password validation
