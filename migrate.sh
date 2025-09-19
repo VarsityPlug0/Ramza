@@ -1,0 +1,6 @@
+#!/bin/bash
+echo "Checking for unapplied migrations..."
+python manage.py showmigrations
+echo "Applying migrations..."
+python manage.py migrate --noinput
+echo "Migration process completed."

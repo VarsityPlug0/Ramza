@@ -30,36 +30,75 @@ postgresql://capitalxdb_user:cErzFTrAr2uuJ180NybFaWBVnr2gMLdI@dpg-d30rrh7diees73
 - Static files are collected to the `staticfiles` directory during deployment
 
 ### Migration Process
-The application uses a custom setup script ([manual_setup.py](file:///c%3A/Users/money/Bevan%20The%20IT%20GUY/absa/ramzas-chillas/manual_setup.py)) that:
-1. Sets up Django environment
-2. Runs database migrations
-3. Creates a default superuser (admin/admin123) if one doesn't exist
+The application ensures migrations are applied automatically during deployment through multiple approaches:
+
+1. **Startup Script**: The [start.sh](file:///c%3A/Users/money/Bevan%20The%20IT%20GUY/absa/ramzas-chillas/start.sh) script runs `python manage.py migrate --noinput` before starting the web server
+2. **Manual Setup**: The [manual_setup.py](file://c:\Users\money\Bevan%20The%20IT%20GUY\absa\ramzas-chillas\manual_setup.py) script can also be used to apply migrations
+3. **Post-Deploy Hook**: The [migrate.sh](file:///c%3A/Users/money/Bevan%20The%20IT%20GUY/absa/ramzas-chillas/migrate.sh) script can be configured as a post-deploy script in Render
+
+### Superuser Creation
+The application automatically creates a default superuser during startup if one doesn't exist:
+- Username: `admin`
+- Email: `admin@example.com`
+- Password: `admin123`
+
+A dedicated script [create_superuser.py](file:///c%3A/Users/money/Bevan%20The%20IT%20GUY/absa/ramzas-chillas/create_superuser.py) handles this process.
 
 ### Start Process
 Render uses a shell script ([start.sh](file:///c%3A/Users/money/Bevan%20The%20IT%20GUY/absa/ramzas-chillas/start.sh)) that:
-1. Makes the script executable
-2. Runs the manual setup script to apply migrations
+1. Applies database migrations
+2. Creates a superuser if needed
 3. Starts Gunicorn with the Django application
-
-This ensures that migrations are applied before the web server starts.
 
 ## Admin Access
 - Admin dashboard: `/dashboard/`
 - Django admin: `/admin/`
 - Default superuser credentials: admin / admin123
 
-## Recent Fixes
-1. Fixed database migration issues by ensuring setup scripts run before web server start
-2. Improved error handling in setup scripts
-3. Switched to using a shell script for startup to ensure proper execution on Render
-4. Verified migration process works correctly both locally and on Render
+## Migration Best Practices
+
+### When to Run `makemigrations`
+- Only run `python manage.py makemigrations` when you make changes to your Django models
+- This command generates new migration files that need to be committed to version control
+- Never run this command on the production server
+
+### When to Run `migrate`
+- Run `python manage.py migrate` every time you deploy new code
+- This command applies existing migrations to the database
+- This is automatically handled in our deployment process
+
+## Render Configuration
+
+### Required Settings in Render Dashboard
+1. **Build Command**: `pip install -r requirements.txt`
+2. **Start Command**: `chmod +x start.sh && ./start.sh`
+3. **Environment Variables**:
+   - `DATABASE_URL`: Your PostgreSQL connection string
+   - `SECRET_KEY`: Your Django secret key
+   - `WEB_CONCURRENCY`: 4 (or as needed)
+
+### Optional Post-Deploy Script
+In the Render dashboard under "Settings" → "Advanced", you can configure:
+- **Post-Deploy Script**: `chmod +x migrate.sh && ./migrate.sh`
+
+This provides an additional layer of ensuring migrations are applied.
 
 ## Troubleshooting
 If you encounter any issues:
-1. Check Render logs for migration errors
-2. Verify database connectivity
-3. Ensure all environment variables are properly set
-4. Check that the setup scripts are running correctly
+
+1. **Database Relation Errors** (like "relation 'auth_user' does not exist"):
+   - Check that migrations are running during deployment
+   - Verify the database connection string is correct
+   - Manually run migrations with `python manage.py migrate`
+
+2. **Migration Issues**:
+   - Check Render logs for migration errors
+   - Run `python manage.py showmigrations` to see migration status
+   - Ensure all migration files are committed to version control
+
+3. **Superuser Access**:
+   - If you can't log in, check that the superuser was created
+   - You can manually create a superuser with `python manage.py createsuperuser`
 
 ## Support
 For any deployment issues or questions, please contact the development team.
