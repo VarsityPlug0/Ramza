@@ -32,9 +32,9 @@ postgresql://capitalxdb_user:cErzFTrAr2uuJ180NybFaWBVnr2gMLdI@dpg-d30rrh7diees73
 ### Migration Process
 The application ensures migrations are applied automatically during deployment through multiple approaches:
 
-1. **Startup Script**: The [start.sh](file:///c%3A/Users/money/Bevan%20The%20IT%20GUY/absa/ramzas-chillas/start.sh) script runs `python manage.py migrate --noinput` before starting the web server
+1. **Startup Script**: The [start.bat](file:///c%3A/Users/money/Bevan%20The%20IT%20GUY/absa/ramzas-chillas/start.bat) script runs `python manage.py migrate --noinput` before starting the web server
 2. **Manual Setup**: The [manual_setup.py](file://c:\Users\money\Bevan%20The%20IT%20GUY\absa\ramzas-chillas\manual_setup.py) script can also be used to apply migrations
-3. **Post-Deploy Hook**: The [migrate.sh](file:///c%3A/Users/money/Bevan%20The%20IT%20GUY/absa/ramzas-chillas/migrate.sh) script can be configured as a post-deploy script in Render
+3. **Post-Deploy Hook**: The [migrate.bat](file:///c%3A/Users/money/Bevan%20The%20IT%20GUY/absa/ramzas-chillas/migrate.bat) script can be configured as a post-deploy script in Render
 
 ### Superuser Creation
 The application automatically creates a default superuser during startup if one doesn't exist:
@@ -45,7 +45,7 @@ The application automatically creates a default superuser during startup if one 
 A dedicated script [create_superuser.py](file:///c%3A/Users/money/Bevan%20The%20IT%20GUY/absa/ramzas-chillas/create_superuser.py) handles this process.
 
 ### Start Process
-Render uses a shell script ([start.sh](file:///c%3A/Users/money/Bevan%20The%20IT%20GUY/absa/ramzas-chillas/start.sh)) that:
+Render uses a batch script ([start.bat](file:///c%3A/Users/money/Bevan%20The%20IT%20GUY/absa/ramzas-chillas/start.bat)) that:
 1. Applies database migrations
 2. Creates a superuser if needed
 3. Starts Gunicorn with the Django application
@@ -71,7 +71,7 @@ Render uses a shell script ([start.sh](file:///c%3A/Users/money/Bevan%20The%20IT
 
 ### Required Settings in Render Dashboard
 1. **Build Command**: `pip install -r requirements.txt`
-2. **Start Command**: `chmod +x start.sh && ./start.sh`
+2. **Start Command**: `start.bat`
 3. **Environment Variables**:
    - `DATABASE_URL`: Your PostgreSQL connection string
    - `SECRET_KEY`: Your Django secret key
@@ -79,7 +79,7 @@ Render uses a shell script ([start.sh](file:///c%3A/Users/money/Bevan%20The%20IT
 
 ### Optional Post-Deploy Script
 In the Render dashboard under "Settings" → "Advanced", you can configure:
-- **Post-Deploy Script**: `chmod +x migrate.sh && ./migrate.sh`
+- **Post-Deploy Script**: `migrate.bat`
 
 This provides an additional layer of ensuring migrations are applied.
 
