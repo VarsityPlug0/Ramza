@@ -27,7 +27,12 @@ SECRET_KEY = 'django-insecure-byg(qwb)o6d#tdjh$3^&)jvgb(bx^b2=2^5_jfo@m!-ver0lln
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = 'DEBUG' in os.environ
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'ramzas-chillas.onrender.com'] if 'ALLOWED_HOSTS' not in os.environ else os.environ['ALLOWED_HOSTS'].split(',')
+ALLOWED_HOSTS = [
+    'localhost', 
+    '127.0.0.1', 
+    'ramzas-chillas.onrender.com',
+    'ramza-ut50.onrender.com'  # Add the new Render domain
+] if 'ALLOWED_HOSTS' not in os.environ else os.environ['ALLOWED_HOSTS'].split(',')
 
 
 # Application definition
