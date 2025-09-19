@@ -31,7 +31,8 @@ ALLOWED_HOSTS = [
     'localhost', 
     '127.0.0.1', 
     'ramzas-chillas.onrender.com',
-    'ramza-ut50.onrender.com'  # Add the new Render domain
+    'ramza-ut50.onrender.com',
+    'ramzakitchen.onrender.com'  # Add the new Render domain
 ] if 'ALLOWED_HOSTS' not in os.environ else os.environ['ALLOWED_HOSTS'].split(',')
 
 
