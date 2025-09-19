@@ -27,6 +27,17 @@ except Exception as e:
     traceback.print_exc()
     sys.exit(1)
 
+# Collect static files
+print("Collecting static files...")
+try:
+    execute_from_command_line(['manage.py', 'collectstatic', '--noinput', '--verbosity=1'])
+    print("Static files collected successfully")
+except Exception as e:
+    print(f"Error collecting static files: {e}")
+    import traceback
+    traceback.print_exc()
+    # Don't exit on static file error as it's not critical for the app to run
+
 # Run migrations
 print("Running Django migrations...")
 try:
