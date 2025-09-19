@@ -59,12 +59,15 @@ All templates use dynamic content from the database:
 ## Installation
 
 1. Clone the repository
-2. Install dependencies: `pip install -r requirements.txt`
-3. Run migrations: `python manage.py migrate`
-4. Create a superuser: `python manage.py createsuperuser`
-5. Populate default content: `python manage.py populate_content`
-6. Add sample images: `python manage.py add_sample_images`
-7. Run the development server: `python manage.py runserver`
+2. Create a virtual environment: `python -m venv venv`
+3. Activate the virtual environment:
+   - On Windows: `venv\Scripts\activate`
+   - On macOS/Linux: `source venv/bin/activate`
+4. Install dependencies: `pip install -r requirements.txt`
+5. Run migrations: `python manage.py migrate`
+6. Create a superuser: `python manage.py createsuperuser`
+7. Populate default content: `python manage.py populate_content`
+8. Run the development server: `python manage.py runserver`
 
 ## Management Commands
 
@@ -126,3 +129,23 @@ Admins can fully customize:
 - Site-wide settings like business hours and contact info
 - Menu items, categories, and pricing
 - Featured items and special offers
+
+## Deployment
+
+For production deployment, make sure to:
+1. Set `DEBUG = False` in settings.py
+2. Set a secure `SECRET_KEY`
+3. Configure allowed hosts
+4. Set up a proper database (PostgreSQL recommended)
+5. Configure static and media file serving
+6. Set up a web server (Nginx/Apache) with WSGI (Gunicorn/uWSGI)
+
+## Currency
+
+All prices are displayed in South African Rand (R).
+
+## Version Control
+
+- Static files are included in version control
+- Media files (uploaded by users) are excluded from version control
+- Database files are excluded from version control
