@@ -11,7 +11,7 @@
 
 ### 1. Procfile
 ```
-web: gunicorn fastfood_restaurant.wsgi:application --bind 0.0.0.0:$PORT
+web: python manual_setup.py && gunicorn fastfood_restaurant.wsgi:application --bind 0.0.0.0:$PORT
 ```
 
 ### 2. runtime.txt
@@ -26,7 +26,7 @@ services:
     name: ramzas-chillas
     env: python
     buildCommand: "pip install -r requirements.txt"
-    startCommand: "python setup_database.py && gunicorn fastfood_restaurant.wsgi:application --bind 0.0.0.0:$PORT"
+    startCommand: "python manual_setup.py && gunicorn fastfood_restaurant.wsgi:application --bind 0.0.0.0:$PORT"
     envVars:
       - key: DATABASE_URL
         value: "postgresql://capitalxdb_user:cErzFTrAr2uuJ180NybFaWBVnr2gMLdI@dpg-d30rrh7diees7389fulg-a/capitalxdb"
@@ -67,17 +67,19 @@ For local development, the application falls back to SQLite if the PostgreSQL da
 - Configured database connection for external PostgreSQL database
 - Set up proper static file serving with WhiteNoise
 - Configured Gunicorn for production deployment
-- Added comprehensive database setup script that runs migrations and creates a superuser
+- Updated Procfile to include manual setup script that runs migrations and creates a superuser
 
 ## Diagnostic Tools
 Several diagnostic tools have been added to help troubleshoot deployment issues:
 
-1. **setup_database.py** - Comprehensive script that runs migrations, verifies tables, and creates a superuser
-2. **ensure_migrations.py** - Custom management command that runs migrations and verifies required tables exist
-3. **test_db_connection.py** - Script to test database connectivity and list existing tables
-4. **run_migrations_manual.py** - Script to manually run migrations with verbose output
-5. **check_migrations.py** - Script to check if required tables exist
-6. **create_superuser.py** - Script to create a superuser account
+1. **manual_setup.py** - Simplified script that runs migrations and creates a superuser
+2. **setup_database.py** - Comprehensive script that runs migrations, verifies tables, and creates a superuser
+3. **ensure_migrations.py** - Custom management command that runs migrations and verifies required tables exist
+4. **test_db_connection.py** - Script to test database connectivity and list existing tables
+5. **run_migrations_manual.py** - Script to manually run migrations with verbose output
+6. **check_migrations.py** - Script to check if required tables exist
+7. **create_superuser.py** - Script to create a superuser account
+8. **test_db_url.py** - Script to test database URL parsing and direct connection
 
 ## Default Superuser
 A default superuser account is automatically created:
@@ -92,6 +94,6 @@ If you encounter issues with the deployment:
 2. **Database connection issues**: Verify the DATABASE_URL in render.yaml
 3. **Static files not loading**: Check WhiteNoise configuration in settings.py
 4. **Application not starting**: Verify the Procfile and start command
-5. **Database tables missing**: The application now uses a comprehensive setup script that ensures all migrations are applied
+5. **Database tables missing**: The application now uses a manual setup script that ensures all migrations are applied
 
 For any changes to the application, push to the GitHub repository and Render will automatically redeploy.
