@@ -36,10 +36,10 @@ The application uses a custom setup script ([manual_setup.py](file:///c%3A/Users
 3. Creates a default superuser (admin/admin123) if one doesn't exist
 
 ### Start Process
-Render uses the following start command:
-```
-python manual_setup.py && gunicorn fastfood_restaurant.wsgi:application --bind 0.0.0.0:$PORT
-```
+Render uses a shell script ([start.sh](file:///c%3A/Users/money/Bevan%20The%20IT%20GUY/absa/ramzas-chillas/start.sh)) that:
+1. Makes the script executable
+2. Runs the manual setup script to apply migrations
+3. Starts Gunicorn with the Django application
 
 This ensures that migrations are applied before the web server starts.
 
@@ -51,7 +51,8 @@ This ensures that migrations are applied before the web server starts.
 ## Recent Fixes
 1. Fixed database migration issues by ensuring setup scripts run before web server start
 2. Improved error handling in setup scripts
-3. Verified migration process works correctly both locally and on Render
+3. Switched to using a shell script for startup to ensure proper execution on Render
+4. Verified migration process works correctly both locally and on Render
 
 ## Troubleshooting
 If you encounter any issues:
