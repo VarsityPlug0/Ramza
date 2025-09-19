@@ -20,6 +20,7 @@ print(f"Django settings module: {os.environ.get('DJANGO_SETTINGS_MODULE')}")
 
 try:
     print("Setting up Django...")
+    import django
     django.setup()
     print("Django setup completed successfully")
 except Exception as e:
@@ -39,7 +40,12 @@ except Exception as e:
 
 print("Running Django migrations...")
 try:
+    # Show current migrations status
+    print("Current migration status:")
     execute_from_command_line(['manage.py', 'showmigrations'])
+    
+    # Run migrations
+    print("Applying migrations...")
     execute_from_command_line(['manage.py', 'migrate', '--noinput', '--verbosity=2'])
     print("Migrations completed successfully")
 except Exception as e:
@@ -58,7 +64,7 @@ try:
         print('Superuser already exists')
 except Exception as e:
     print(f"Error creating superuser: {e}")
+    # This is not critical, so we won't exit on error
     traceback.print_exc()
-    sys.exit(1)
 
 print("=== MANUAL SETUP COMPLETED SUCCESSFULLY ===")

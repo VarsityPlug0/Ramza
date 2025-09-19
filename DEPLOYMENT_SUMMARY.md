@@ -11,7 +11,7 @@
 
 ### 1. Procfile
 ```
-web: python manual_setup.py && gunicorn fastfood_restaurant.wsgi:application --bind 0.0.0.0:$PORT
+web: python test_execution.py && python manual_setup.py && gunicorn fastfood_restaurant.wsgi:application --bind 0.0.0.0:$PORT
 ```
 
 ### 2. runtime.txt
@@ -67,23 +67,25 @@ For local development, the application falls back to SQLite if the PostgreSQL da
 - Configured database connection for external PostgreSQL database
 - Set up proper static file serving with WhiteNoise
 - Configured Gunicorn for production deployment
-- Updated Procfile to include manual setup script that runs migrations and creates a superuser
+- Updated Procfile to include execution test and manual setup script
 
 ## Diagnostic Tools
 Several diagnostic tools have been added to help troubleshoot deployment issues:
 
-1. **manual_setup.py** - Simplified script that runs migrations and creates a superuser
-2. **debug_setup.py** - Script to debug Django and database configuration
-3. **run_migrations.py** - Script to manually run Django migrations
-4. **test_setup.py** - Script to test if Django and database are properly configured
-5. **db_test.py** - Script to test database connection directly
-6. **setup_database.py** - Comprehensive script that runs migrations, verifies tables, and creates a superuser
-7. **ensure_migrations.py** - Custom management command that runs migrations and verifies required tables exist
-8. **test_db_connection.py** - Script to test database connectivity and list existing tables
-9. **run_migrations_manual.py** - Script to manually run migrations with verbose output
-10. **check_migrations.py** - Script to check if required tables exist
-11. **create_superuser.py** - Script to create a superuser account
-12. **test_db_url.py** - Script to test database URL parsing and direct connection
+1. **test_execution.py** - Script to test if our setup scripts are being executed
+2. **manual_setup.py** - Simplified script that runs migrations and creates a superuser
+3. **debug_setup.py** - Script to debug Django and database configuration
+4. **run_migrations.py** - Script to manually run Django migrations
+5. **test_setup.py** - Script to test if Django and database are properly configured
+6. **simple_db_test.py** - Script to test database connection directly
+7. **db_test.py** - Script to test database connection with URL parsing
+8. **setup_database.py** - Comprehensive script that runs migrations, verifies tables, and creates a superuser
+9. **ensure_migrations.py** - Custom management command that runs migrations and verifies required tables exist
+10. **test_db_connection.py** - Script to test database connectivity and list existing tables
+11. **run_migrations_manual.py** - Script to manually run migrations with verbose output
+12. **check_migrations.py** - Script to check if required tables exist
+13. **create_superuser.py** - Script to create a superuser account
+14. **test_db_url.py** - Script to test database URL parsing and direct connection
 
 ## Default Superuser
 A default superuser account is automatically created:

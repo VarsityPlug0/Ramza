@@ -1,1 +1,1 @@
-web: python test_execution.py && python manual_setup.py && gunicorn fastfood_restaurant.wsgi:application --bind 0.0.0.0:$PORT
+web: python start_server.py
