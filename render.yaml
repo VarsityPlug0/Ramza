@@ -1,12 +1,12 @@
 services:
   - type: web
-    name: ramzas-chillas  # This will be your new service name
+    name: RamzaKitchen
     env: python
     buildCommand: "pip install -r requirements.txt"
     startCommand: "python start_server.py"
     envVars:
       - key: DATABASE_URL
-        value: "postgresql://your_db_user:your_db_password@your_db_host:5432/your_db_name"  # This will be your new database URL
+        value: "postgresql://new_db_5z82_user:kAJ270gySDbeO8bm9OiCFotDsTSWacRb@dpg-d36uhc95pdvs739lh6e0-a/new_db_5z82"
       - key: SECRET_KEY
         sync: false
       - key: WEB_CONCURRENCY
